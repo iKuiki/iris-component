@@ -9,7 +9,7 @@ var ErrHandler = iris.HandlerFunc(func(ctx *iris.Context) {
 		if err := recover(); err != nil {
 			resp, ok := err.(RespondData)
 			if ok {
-				ctx.JSON(500, resp)
+				ctx.JSON(iris.StatusInternalServerError, resp)
 				ctx.StopExecution()
 			} else {
 				ctx.Log("Recovery from panic: %v\n", err)
