@@ -1,7 +1,7 @@
 package response
 
 import (
-	"github.com/kataras/iris"
+	"gopkg.in/kataras/iris.v6"
 )
 
 var ErrHandler = iris.HandlerFunc(func(ctx *iris.Context) {
@@ -12,7 +12,6 @@ var ErrHandler = iris.HandlerFunc(func(ctx *iris.Context) {
 				ctx.JSON(iris.StatusInternalServerError, resp)
 				ctx.StopExecution()
 			} else {
-				ctx.Log("Recovery from panic: %v\n", err)
 				ctx.Panic()
 			}
 
