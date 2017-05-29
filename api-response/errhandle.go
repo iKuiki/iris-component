@@ -12,6 +12,7 @@ var ErrHandler = iris.HandlerFunc(func(ctx *iris.Context) {
 				ctx.JSON(iris.StatusInternalServerError, resp)
 				ctx.StopExecution()
 			} else {
+				ctx.Log(iris.DevMode, "[%s]%s Panic: %#v", ctx.Method(), ctx.Path(), err)
 				ctx.Panic()
 			}
 
