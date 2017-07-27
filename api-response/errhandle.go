@@ -2,6 +2,7 @@ package response
 
 import (
 	"gopkg.in/kataras/iris.v6"
+	"runtime"
 )
 
 var ErrHandler = iris.HandlerFunc(func(ctx *iris.Context) {
@@ -12,7 +13,12 @@ var ErrHandler = iris.HandlerFunc(func(ctx *iris.Context) {
 				ctx.JSON(iris.StatusInternalServerError, resp)
 				ctx.StopExecution()
 			} else {
-				ctx.Log(iris.DevMode, "[%s]%s Panic: %#v", ctx.Method(), ctx.Path(), err)
+				funcName, file, line, ok := runtime.Caller(3)
+				if ok {
+					ctx.Log(iris.DevMode, "[%s]%s Panic: %#v\nFunc name: %s\nFile: %s[%d]\n", ctx.Method(), ctx.Path(), err, runtime.FuncForPC(funcName).Name(), file, line)
+				} else {
+					ctx.Log(iris.DevMode, "[%s]%s Panic: %#v\n", ctx.Method(), ctx.Path(), err)
+				}
 				ctx.Panic()
 			}
 

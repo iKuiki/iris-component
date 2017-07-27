@@ -6,6 +6,7 @@ import (
 	"github.com/yinhui87/iris-component/api-response"
 	"gopkg.in/kataras/iris.v6"
 	"io/ioutil"
+	"runtime"
 	"strconv"
 )
 
@@ -35,6 +36,17 @@ func Success(ctx *iris.Context, info string, data interface{}, toKen ...string) 
 	ctx.JSON(iris.StatusOK, resp)
 }
 
+func logErrToConsole(ctx *iris.Context, logInfo string) {
+	if logInfo != "" {
+		funcName, file, line, ok := runtime.Caller(1)
+		if ok {
+			ctx.Log(iris.ProdMode, "%s\nFunc name: %s\nFile: %s[%d]\n", logInfo, runtime.FuncForPC(funcName).Name(), file, line)
+		} else {
+			ctx.Log(iris.ProdMode, logInfo)
+		}
+	}
+}
+
 func InvalidParam(ctx *iris.Context, code int32, info string, data interface{}, logInfo string, toKen ...string) {
 	resp := response.RespondData{}
 	var token string
@@ -43,9 +55,7 @@ func InvalidParam(ctx *iris.Context, code int32, info string, data interface{}, 
 	} else {
 		token = ctx.RequestHeader("token")
 	}
-	if logInfo != "" {
-		ctx.Log(iris.ProdMode, logInfo)
-	}
+	logErrToConsole(ctx, logInfo)
 	resp.Assign(response.RET_ERROR, code, info, token, data)
 	ctx.JSON(iris.StatusOK, resp)
 	panic(nil)
@@ -60,9 +70,7 @@ func Error(ctx *iris.Context, code int32, info string, data interface{}, logInfo
 	} else {
 		token = ctx.RequestHeader("token")
 	}
-	if logInfo != "" {
-		ctx.Log(iris.ProdMode, logInfo)
-	}
+	logErrToConsole(ctx, logInfo)
 	resp.Assign(response.RET_ERROR, code, info, token, data)
 	panic(resp)
 }
