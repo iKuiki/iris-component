@@ -1,27 +1,43 @@
 package response
 
-type RET_STATUS int32
+// RetStatus 返回状态
+type RetStatus int32
 
 const (
-	RET_ERROR     RET_STATUS = 0
-	RET_NORMAL    RET_STATUS = 1
-	RET_NEEDLOGIN RET_STATUS = 2
+	// RetError 未按预期执行，有错误发生
+	RetError RetStatus = -1
+	// RetNormal 正常执行
+	RetNormal RetStatus = 0
+	// RetNeedlogin 因未登录而无法执行
+	RetNeedlogin RetStatus = 1
 )
+
+// RespCode 若发生错误，错误的详细代码
+type RespCode int32
 
 const (
-	ERROR_NO_ERROR     int32 = 0
-	ERROR_NORMAL_ERROR int32 = -1
+	// ErrorNoError 无错误
+	ErrorNoError RespCode = 0
+	// ErrorNormalError 一般错误
+	ErrorNormalError RespCode = -1
 )
 
+// RespondData API返回结果的框架格式
 type RespondData struct {
-	Ret   RET_STATUS  `json:"ret"`
-	Code  int32       `json:"code"`
-	Info  string      `json:"info"`
-	Data  interface{} `json:"data"`
-	Token string      `json:"token"`
+	// Status 执行结果
+	Ret RetStatus `json:"ret"`
+	// Code 错误代码，若无错误发生则未0(RetCodeNoError)
+	Code RespCode `json:"code"`
+	// Info 附加信息
+	Info string `json:"info"`
+	// Data 若有数据返回，则在此对象内
+	Data interface{} `json:"data"`
+	// Token 下次交互使用的token
+	Token string `json:"token"`
 }
 
-func (r *RespondData) Assign(ret RET_STATUS, code int32, info, token string, data interface{}) {
+// Assign 将参数一次性赋值到返回数据中
+func (r *RespondData) Assign(ret RetStatus, code RespCode, info, token string, data interface{}) {
 	r.Ret = ret
 	r.Code = code
 	r.Info = info
