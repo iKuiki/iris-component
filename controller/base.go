@@ -4,7 +4,6 @@ import (
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/mvc"
 	"github.com/yinhui87/iris-component/api-response"
-	"runtime"
 	"strconv"
 )
 
@@ -41,12 +40,7 @@ func (ctl *BaseController) Success(info string, data interface{}, toKen ...strin
 
 func (ctl *BaseController) logErrToConsole(logInfo string) {
 	if logInfo != "" {
-		funcName, file, line, ok := runtime.Caller(1)
-		if ok {
-			ctl.Ctx.Application().Logger().Errorf("%s\nFunc name: %s\nFile: %s[%d]\n", logInfo, runtime.FuncForPC(funcName).Name(), file, line)
-		} else {
-			ctl.Ctx.Application().Logger().Errorf(logInfo)
-		}
+		ctl.Ctx.Application().Logger().Warnf("[%s]%s | %s", ctl.Ctx.Method(), ctl.Ctx.Path(), logInfo)
 	}
 }
 

@@ -2,7 +2,6 @@ package response
 
 import (
 	"github.com/kataras/iris"
-	"runtime"
 )
 
 // ErrHandle 错误控制器
@@ -15,12 +14,7 @@ var ErrHandler = iris.Handler(func(ctx iris.Context) {
 				ctx.JSON(resp)
 				ctx.StopExecution()
 			} else {
-				funcName, file, line, ok := runtime.Caller(3)
-				if ok {
-					ctx.Application().Logger().Warnf("[%s]%s Panic: %#v\nFunc name: %s\nFile: %s[%d]\n", ctx.Method(), ctx.Path(), err, runtime.FuncForPC(funcName).Name(), file, line)
-				} else {
-					ctx.Application().Logger().Warnf("[%s]%s Panic: %#v\n", ctx.Method(), ctx.Path(), err)
-				}
+				ctx.Application().Logger().Errorf("[%s]%s Panic: %#v", ctx.Method(), ctx.Path(), err)
 				ctx.StopExecution()
 			}
 
