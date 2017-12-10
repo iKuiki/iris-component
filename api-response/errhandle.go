@@ -4,7 +4,7 @@ import (
 	"github.com/kataras/iris"
 )
 
-// ErrHandle 错误控制器
+// ErrHandler 错误控制器
 var ErrHandler = iris.Handler(func(ctx iris.Context) {
 	defer func() {
 		if err := recover(); err != nil {
