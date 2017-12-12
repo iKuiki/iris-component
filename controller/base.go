@@ -54,7 +54,7 @@ func (ctl *BaseController) InvalidParam(code response.RespCode, info string, dat
 		token = ctl.Ctx.GetHeader("token")
 	}
 	ctl.logErrToConsole(logInfo)
-	resp.Assign(response.RetError, code, info, token, data)
+	resp.Assign(response.RetInvalidParam, code, info, token, data)
 	ctl.Ctx.JSON(resp)
 	panic(nil)
 }

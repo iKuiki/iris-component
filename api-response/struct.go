@@ -8,8 +8,10 @@ const (
 	RetError RetStatus = -1
 	// RetNormal 正常执行
 	RetNormal RetStatus = 0
+	// RetInvalidParam 因输入错误而无法执行
+	RetInvalidParam RetStatus = 1
 	// RetNeedlogin 因未登录而无法执行
-	RetNeedlogin RetStatus = 1
+	RetNeedlogin RetStatus = 2
 )
 
 // RespCode 若发生错误，错误的详细代码
